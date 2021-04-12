@@ -1,15 +1,15 @@
-const path = require('path');
+const path = require('path')
 function resolve(relatedPath) {
   return path.join(__dirname, relatedPath)
 }
 
 module.exports = {
-  mode: 'development',
   entry: {
     app: resolve('../src/index.js')
   },
   output: {
-    filename: '[name].js',
-    path: resolve('../dist')
+    path: resolve('../dist'),
+    publicPath: '/',
+    filename: '[name].[contenthash].js'
   }
 }
