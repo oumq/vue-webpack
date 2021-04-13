@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const webpackConfigBase = require('./webpack.base.config')
 const { merge } = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { moduleList } = require('./modules')
 
 let selfIp
 try {
@@ -12,6 +13,18 @@ try {
 }
 
 const PORT = 9527
+
+const htmlWebpackPlugins = []
+for (let i = 0, len = moduleList.length; i < len; i++) {
+  htmlWebpackPlugins.push(
+    new HtmlWebpackPlugin({
+      filename: `${moduleList[i]}/index.html`,
+      template: `./src/modules/${moduleList[i]}/index.html`,
+      inject: true,
+      chunks: [moduleList[i]]
+    })
+  )
+}
 
 // 精确的获取本机ip地址
 function getIpAddress() {
@@ -38,12 +51,9 @@ function resolve(relatedPath) {
 const webpackConfigDev = {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: resolve('../public/index.html')
-    }),
-    new webpack.HotModuleReplacementPlugin()
-  ],
+  plugins: [new webpack.HotModuleReplacementPlugin()].concat(
+    htmlWebpackPlugins
+  ),
   devServer: {
     host: selfIp,
     compress: true,
