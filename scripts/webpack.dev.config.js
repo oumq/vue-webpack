@@ -2,7 +2,9 @@ const path = require('path')
 const webpack = require('webpack')
 const webpackConfigBase = require('./webpack.base.config')
 const { merge } = require('webpack-merge')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { moduleList } = require('./modules')
 
 let selfIp
@@ -51,9 +53,16 @@ function resolve(relatedPath) {
 const webpackConfigDev = {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
-  plugins: [new webpack.HotModuleReplacementPlugin()].concat(
-    htmlWebpackPlugins
-  ),
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [{ from: resolve('../public'), to: 'static' }]
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'css/[name].[contenthash].css',
+      chunkFilename: 'css/[id].[contenthash].css'
+    })
+  ].concat(htmlWebpackPlugins),
   devServer: {
     host: selfIp,
     compress: true,

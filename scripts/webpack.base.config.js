@@ -1,3 +1,5 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
 const path = require('path')
 const { moduleList } = require('./modules')
 
@@ -28,6 +30,38 @@ module.exports = {
         use: {
           loader: 'babel-loader'
         }
+      },
+      {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
+      },
+      {
+        test: /\.scss$/,
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'static/img/[name].[hash:7].[ext]'
+        }
+      },
+      {
+        test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'static/media/[name].[hash:7].[ext]'
+        }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          name: 'static/fonts/[name].[hash:7].[ext]'
+        }
       }
     ]
   },
@@ -45,12 +79,14 @@ module.exports = {
         libs: {
           test: /[\\/]node_modules[\\/]/,
           name: 'chunk-libs',
+          filename: 'static/js/[name].[contenthash].js',
           chunks: 'initial',
           priority: 10
         },
         components: {
           test: resolve('../src/components'),
           name: 'chunk-components',
+          filename: 'static/js/[name].[contenthash].js',
           chunks: 'initial',
           minChunks: 1,
           priority: 5
