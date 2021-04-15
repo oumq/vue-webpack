@@ -1,10 +1,25 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
 const path = require('path')
 const { moduleList } = require('./modules')
 
 function resolve(relatedPath) {
   return path.join(__dirname, relatedPath)
+}
+
+const htmlWebpackPlugins = []
+for (let i = 0, len = moduleList.length; i < len; i++) {
+  htmlWebpackPlugins.push(
+    new HtmlWebpackPlugin({
+      filename: `${moduleList[i]}/index.html`,
+      template: `./src/modules/${moduleList[i]}/index.html`,
+      inject: true,
+      chunks: [moduleList[i]]
+    })
+  )
 }
 
 function getEntrys() {
@@ -22,8 +37,18 @@ module.exports = {
     publicPath: '/',
     filename: '[name]/js/[name].[contenthash].js'
   },
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      '@': resolve('../src')
+    }
+  },
   module: {
     rules: [
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
+      },
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
@@ -68,9 +93,8 @@ module.exports = {
   optimization: {
     splitChunks: {
       chunks: 'all', // 代码分割时对异步代码生效，all：所有代码有效，inital：同步代码有效
-      // minSize: 30000, // 代码分割最小的模块大小，引入的模块大于 30000B 也就是30kb 才做代码分割
-      // maxSize: 0, // 代码分割最大的模块大小，大于这个值要进行代码分割，一般使用默认值
-      // minChunks: 1, // 引入的次数大于等于1时才进行代码分割
+      minSize: 30000, // 代码分割最小的模块大小，引入的模块大于 30000B 也就是30kb 才做代码分割
+      minChunks: 1, // 引入的次数大于等于1时才进行代码分割
       maxAsyncRequests: 6, // 最大的异步请求数量,也就是同时加载的模块最大模块数量
       maxInitialRequests: 4, // 入口文件做代码分割最多分成 4 个 js 文件
       automaticNameDelimiter: '~', // 文件生成时的连接符
@@ -92,6 +116,19 @@ module.exports = {
           priority: 5
         }
       }
+    },
+    runtimeChunk: {
+      name: 'manifest'
     }
-  }
+  },
+  plugins: [
+    new VueLoaderPlugin(),
+    new CopyWebpackPlugin({
+      patterns: [{ from: resolve('../public'), to: 'static' }]
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'static/css/[name].[contenthash].css',
+      chunkFilename: 'static/css/[id].[contenthash].css'
+    })
+  ].concat(htmlWebpackPlugins)
 }

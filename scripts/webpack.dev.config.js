@@ -2,10 +2,6 @@ const path = require('path')
 const webpack = require('webpack')
 const webpackConfigBase = require('./webpack.base.config')
 const { merge } = require('webpack-merge')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const { moduleList } = require('./modules')
 
 let selfIp
 try {
@@ -15,18 +11,6 @@ try {
 }
 
 const PORT = 9527
-
-const htmlWebpackPlugins = []
-for (let i = 0, len = moduleList.length; i < len; i++) {
-  htmlWebpackPlugins.push(
-    new HtmlWebpackPlugin({
-      filename: `${moduleList[i]}/index.html`,
-      template: `./src/modules/${moduleList[i]}/index.html`,
-      inject: true,
-      chunks: [moduleList[i]]
-    })
-  )
-}
 
 // 精确的获取本机ip地址
 function getIpAddress() {
@@ -53,21 +37,19 @@ function resolve(relatedPath) {
 const webpackConfigDev = {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new CopyWebpackPlugin({
-      patterns: [{ from: resolve('../public'), to: 'static' }]
-    }),
-    new MiniCssExtractPlugin({
-      filename: 'css/[name].[contenthash].css',
-      chunkFilename: 'css/[id].[contenthash].css'
-    })
-  ].concat(htmlWebpackPlugins),
+  plugins: [new webpack.HotModuleReplacementPlugin()],
   devServer: {
     host: selfIp,
     compress: true,
     hot: true,
-    port: PORT
+    port: PORT,
+    historyApiFallback: {
+      rewrites: [
+        { from: /.*/, to: '/article' },
+        { from: /\/article/, to: '/index.html' },
+        { from: /\/user/, to: '/index.html' }
+      ]
+    }
   }
 }
 
