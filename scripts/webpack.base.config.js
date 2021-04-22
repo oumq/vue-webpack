@@ -34,7 +34,7 @@ module.exports = {
   entry: getEntrys(),
   output: {
     path: resolve('../dist'),
-    publicPath: '/',
+    publicPath: '/vue-webpack',
     filename: '[name]/js/[name].[contenthash].js'
   },
   resolve: {
