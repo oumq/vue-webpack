@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 /dist
+dist.zip
+/scripts/deploy.js
 
 
 # local env files
