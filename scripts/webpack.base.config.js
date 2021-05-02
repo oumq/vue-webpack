@@ -34,7 +34,7 @@ module.exports = {
   entry: getEntrys(),
   output: {
     path: resolve('../dist'),
-    publicPath: '/vue-webpack',
+    publicPath: process.env.NODE_ENV === 'production' ? '/vue-webpack' : '/',
     filename: '[name]/js/[name].[contenthash].js'
   },
   resolve: {

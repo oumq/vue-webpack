@@ -42,8 +42,7 @@ function uploadFile() {
       //configs存放的是连接远程机器的信息
       host: '',
       username: '',
-      password: '',
-      port: 22 //SSH连接默认在22端口
+      privateKey: ''
     })
     .then(function () {
       console.log(path.join(__dirname, '../dist.zip'))
@@ -51,7 +50,7 @@ function uploadFile() {
         .putFiles([
           {
             local: path.join(__dirname, '../dist.zip'),
-            remote: '/data/sftp/test/upload/dist.zip'
+            remote: '/project/dist.zip'
           }
         ])
         .then(res => {
@@ -74,9 +73,9 @@ function uploadFile() {
 function startRemoteShell() {
   //在服务器上cwd配置的路径下执行sh deploy.sh脚本来实现发布
   ssh
-    .execCommand('sh deploy.sh', { cwd: '/data/sftp/test/upload' })
+    .execCommand('sh deploy.sh', { cwd: '/project' })
     .then(function (result) {
-      console.log('远程STDOUT输出: ' + JSON.stringify(result))
+      // console.log('远程STDOUT输出: ' + JSON.stringify(result))
       // console.log('远程STDERR输出: ' + result.stderr)
       if (!result.stderr) {
         console.log('发布成功!')

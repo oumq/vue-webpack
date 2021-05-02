@@ -6,8 +6,8 @@
   "author": "oumq",
   "license": "MIT",
   "scripts": {
-    "serve": "webpack-dev-server --config scripts/webpack.dev.config.js",
-    "build": "webpack --config scripts/webpack.prod.config.js",
+    "serve": "cross-env NODE_ENV=development webpack-dev-server --config scripts/webpack.dev.config.js",
+    "build": "cross-env NODE_ENV=production webpack --config scripts/webpack.prod.config.js",
     "lint": "eslint src/**/*.js",
     "fix": "prettier --write src/**/*.js",
     "commit": "git-cz",
@@ -37,6 +37,7 @@
     "commitizen": "^4.2.3",
     "compression-webpack-plugin": "^7.1.2",
     "copy-webpack-plugin": "^8.1.1",
+    "cross-env": "^7.0.3",
     "css-loader": "^5.2.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^7.22.0",
