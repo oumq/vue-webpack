@@ -45,9 +45,10 @@ const webpackConfigDev = {
     port: PORT,
     historyApiFallback: {
       rewrites: [
-        { from: /.*/, to: '/article' },
-        { from: /\/article/, to: '/index.html' },
-        { from: /\/user/, to: '/index.html' }
+        { from: /.*/, to: '/apple' },
+        { from: /^\/article\/.*$/, to: '/index.html' },
+        { from: /^\/user\/.*$/, to: '/index.html' },
+        { from: /^\/apple\/.*$/, to: '/index.html' }
       ]
     }
   }
