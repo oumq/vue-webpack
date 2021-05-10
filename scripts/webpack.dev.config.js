@@ -37,12 +37,21 @@ function resolve(relatedPath) {
 const webpackConfigDev = {
   mode: 'development',
   devtool: 'eval-cheap-module-source-map',
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
+  ],
   devServer: {
     host: selfIp,
     compress: true,
     hot: true,
+    // hotOnly: true,
     port: PORT,
+    inline: true,
+    quiet: true,
+    overlay: {
+      errors: true
+    },
     historyApiFallback: {
       rewrites: [
         { from: /.*/, to: '/apple' },

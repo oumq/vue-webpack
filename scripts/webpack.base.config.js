@@ -1,6 +1,7 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 
 const path = require('path')
@@ -25,7 +26,11 @@ for (let i = 0, len = moduleList.length; i < len; i++) {
 function getEntrys() {
   const entry = {}
   for (let i = 0, len = moduleList.length; i < len; i++) {
-    entry[moduleList[i]] = resolve(`../src/modules/${moduleList[i]}/index.js`)
+    entry[moduleList[i]] = [
+      'webpack-dev-server/client?http://localhost:9527',
+      // 'webpack/hot/only-dev-server',
+      resolve(`../src/modules/${moduleList[i]}/index.js`)
+    ]
   }
   return entry
 }
@@ -57,12 +62,15 @@ module.exports = {
         }
       },
       {
-        test: /\.css$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader']
-      },
-      {
-        test: /\.scss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader']
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          process.env.NODE_ENV === 'production'
+            ? MiniCssExtractPlugin.loader
+            : 'style-loader',
+          'css-loader',
+          // 'postcss-loader',
+          'sass-loader'
+        ]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -129,6 +137,7 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'static/css/[name].[contenthash].css',
       chunkFilename: 'static/css/[id].[contenthash].css'
-    })
+    }),
+    new FriendlyErrorsWebpackPlugin()
   ].concat(htmlWebpackPlugins)
 }
