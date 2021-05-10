@@ -27,7 +27,7 @@ function getEntrys() {
   const entry = {}
   for (let i = 0, len = moduleList.length; i < len; i++) {
     entry[moduleList[i]] = [
-      'webpack-dev-server/client?http://localhost:9527',
+      'webpack-dev-server/client',
       // 'webpack/hot/only-dev-server',
       resolve(`../src/modules/${moduleList[i]}/index.js`)
     ]
@@ -51,10 +51,6 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.vue$/,
-        loader: 'vue-loader'
-      },
-      {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
@@ -71,6 +67,10 @@ module.exports = {
           // 'postcss-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader'
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
