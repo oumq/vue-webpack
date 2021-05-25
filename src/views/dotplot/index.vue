@@ -1,9 +1,13 @@
 <template>
-  <div> </div>
+  <div class="dotplot-wrapper"> dotplot </div>
 </template>
-
 <script>
-export default {}
+export default {
+  name: 'dotplot'
+}
 </script>
-
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.dotplot-wrapper {
+  min-height: 100vh;
+}
+</style>
