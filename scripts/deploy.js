@@ -79,6 +79,7 @@ function startRemoteShell() {
       // console.log('远程STDERR输出: ' + result.stderr)
       if (!result.stderr) {
         console.log('发布成功!')
+        delZip()
         process.exit(0)
       }
     })
@@ -86,4 +87,9 @@ function startRemoteShell() {
       console.error(err)
       process.exit(0)
     })
+}
+
+// 删除dist.zip文件
+function delZip() {
+  fs.unlinkSync(path.join(__dirname, '../dist.zip'))
 }
