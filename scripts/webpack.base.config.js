@@ -73,9 +73,10 @@ module.exports = {
         loader: 'vue-loader'
       },
       {
-        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        test: /\.(png|jpg|jpeg|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
         options: {
+          esModule: false,
           limit: 10000,
           name: 'static/img/[name].[hash:7].[ext]'
         }

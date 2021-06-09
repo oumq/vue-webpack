@@ -1,9 +1,19 @@
 <template>
-  <div class="dotplot-wrapper"> dotplot </div>
+  <div class="dotplot-wrapper">
+    <canvas width="500" height="500"></canvas>
+  </div>
 </template>
 <script>
 export default {
-  name: 'dotplot'
+  name: 'dotplot',
+  data() {
+    return {
+      canvas: null
+    }
+  },
+  methods: {
+    init() {}
+  }
 }
 </script>
 <style lang="scss" scoped>
