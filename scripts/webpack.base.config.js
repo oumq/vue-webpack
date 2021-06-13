@@ -27,8 +27,9 @@ function getEntrys() {
   const entry = {}
   for (let i = 0, len = moduleList.length; i < len; i++) {
     entry[moduleList[i]] = [
-      'webpack-dev-server/client',
+      // 'webpack-dev-server/client',
       // 'webpack/hot/only-dev-server',
+      // 'babel-polyfill',
       resolve(`../src/modules/${moduleList[i]}/index.js`)
     ]
   }
@@ -39,7 +40,7 @@ module.exports = {
   entry: getEntrys(),
   output: {
     path: resolve('../dist'),
-    publicPath: process.env.NODE_ENV === 'production' ? '/vue-webpack' : '/',
+    publicPath: process.env.NODE_ENV === 'production' ? '/vue-webpack/' : '/',
     filename: '[name]/js/[name].[contenthash].js'
   },
   resolve: {
@@ -125,10 +126,10 @@ module.exports = {
           priority: 5
         }
       }
-    },
-    runtimeChunk: {
-      name: 'manifest'
     }
+    // runtimeChunk: {
+    //   name: 'manifest'
+    // }
   },
   plugins: [
     new VueLoaderPlugin(),

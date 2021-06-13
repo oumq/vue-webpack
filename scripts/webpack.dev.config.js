@@ -44,7 +44,8 @@ const webpackConfigDev = {
   devServer: {
     host: selfIp,
     compress: true,
-    hot: true,
+    // hot: true,
+    hotOnly: true,
     port: PORT,
     inline: true,
     quiet: true,

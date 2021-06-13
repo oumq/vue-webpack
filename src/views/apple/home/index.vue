@@ -20,7 +20,7 @@
 
 <script>
 export default {
-  name: 'apple-index',
+  name: 'apple-home',
   data() {
     return {
       canvas: null,
