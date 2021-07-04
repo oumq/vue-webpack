@@ -54,10 +54,11 @@ const webpackConfigDev = {
     },
     historyApiFallback: {
       rewrites: [
-        { from: /.*/, to: '/apple' },
+        { from: /.*/, to: '/dotplot' },
         { from: /^\/article\/.*$/, to: '/index.html' },
         { from: /^\/user\/.*$/, to: '/index.html' },
-        { from: /^\/apple\/.*$/, to: '/index.html' }
+        { from: /^\/apple\/.*$/, to: '/index.html' },
+        { from: /^\/dotplot\/.*$/, to: '/index.html' }
       ]
     }
   }
