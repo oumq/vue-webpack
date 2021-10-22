@@ -1,9 +1,13 @@
 <template>
   <div class="dotplot-wrapper">
-    <canvas id="canvas" width="770" height="300"></canvas>
+    <div ref="txt" style="position: absolute; z-index: -999"></div>
+    <div class="canvas-wrap" ref="canvas-wrap">
+      <canvas id="canvas" width="770" height="300"></canvas>
+    </div>
   </div>
 </template>
 <script>
+import html2canvas from 'html2canvas'
 export default {
   name: 'dotplot',
   data() {
@@ -25,16 +29,18 @@ export default {
       this.ctx = this.canvas.getContext('2d')
       this.ctx.lineWidth = 1
       // this.ctx.strokeStyle = '#F5B09E'
-      this.animate()
+      // this.animate()
 
-      // this.img = new Image()
-      // this.img.src = require('../../assets/dotplot/icon.jpeg')
-      // this.img.onload = () => {
-      //   canvas.width = this.img.width
-      //   canvas.height = this.img.height
-      //   this.ctx.drawImage(this.img, 0, 0)
-      //   this.clip()
-      // }
+      this.img = new Image()
+      this.img.src = require('../../assets/logo.png')
+      this.img.onload = () => {
+        canvas.width = this.img.width
+        canvas.height = this.img.height
+        this.ctx.drawImage(this.img, 0, 0)
+        // this.clip()
+        this.imgToText()
+        this.h2c()
+      }
     },
     drawCurvePath(start, end, curveness) {
       var cp = [
@@ -197,6 +203,85 @@ export default {
       }
 
       this.ctx.putImageData(imageData, 0, 0)
+    },
+    getGray(r, g, b) {
+      return 0.299 * r + 0.587 * g + 0.114 * b
+    },
+    toText(g) {
+      if (g <= 30) {
+        return '#'
+      } else if (g > 30 && g <= 60) {
+        return '&'
+      } else if (g > 60 && g <= 120) {
+        return '$'
+      } else if (g > 120 && g <= 150) {
+        return 'o'
+      } else if (g > 150 && g <= 180) {
+        return '*'
+      } else if (g > 180 && g <= 210) {
+        return '!'
+      } else if (g > 210 && g <= 240) {
+        return ';'
+      } else {
+        return '.'
+      }
+    },
+    imgToText() {
+      let imageData = this.ctx.getImageData(
+        0,
+        0,
+        this.img.width,
+        this.img.height
+      )
+      let px = imageData.data
+      let imgDataWidth = imageData.width
+      let imgDataHeight = imageData.height
+      let html = ''
+      for (let h = 0; h < imgDataHeight; h += 6) {
+        let p = '<p style="display: flex; padding: 0; margin: 0;">'
+        for (let w = 0; w < imgDataWidth; w += 3) {
+          let index = (w + imgDataHeight * h) * 4
+          let r = px[index + 0]
+          let g = px[index + 1]
+          let b = px[index + 2]
+          let gray = this.getGray(r, g, b)
+          let each =
+            '<span style="width:12px;height: 12px;line-height: 12px;">' +
+            this.toText(gray) +
+            '</span>'
+          p += each
+        }
+        p += '</p>'
+        html += p
+      }
+      this.$refs.txt.innerHTML = html
+
+      for (let i = 0; i < px.length; i++) {
+        let r = px[i]
+        let g = px[i + 1]
+        let b = px[i + 2]
+        let gray = this.getGray(r, g, b)
+        px[i] = gray
+        px[i + 1] = gray
+        px[i + 2] = gray
+      }
+
+      // this.ctx.putImageData(
+      //   imageData,
+      //   0,
+      //   0,
+      //   0,
+      //   0,
+      //   this.img.width,
+      //   this.img.height
+      // )
+    },
+    h2c() {
+      html2canvas(this.$refs.txt).then(canvas => {
+        canvas.style.width = this.img.width + 'px'
+        canvas.style.height = this.img.height + 'px'
+        this.$refs['canvas-wrap'].append(canvas)
+      })
     }
   }
 }
@@ -204,5 +289,9 @@ export default {
 <style lang="scss" scoped>
 .dotplot-wrapper {
   min-height: 100vh;
+  .canvas-wrap {
+    min-height: 100vh;
+    background: #fff;
+  }
 }
 </style>
